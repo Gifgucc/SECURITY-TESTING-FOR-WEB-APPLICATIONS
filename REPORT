@@ -1,0 +1,62 @@
+Security Assessment Report: SQL Injection Vulnerability in `testphp.vulnweb.com/artists.php`
+
+**1. Introduction**
+
+This report documents the findings of a manual security assessment conducted on `http://testphp.vulnweb.com/artists.php`. The assessment focused on identifying SQL injection vulnerabilities.
+
+**2. Scope**
+
+The scope of this assessment was limited to the `artists.php` page and its associated `artist` parameter.
+
+**3. Methodology**
+
+The assessment was performed manually, following these steps:
+
+* **Reconnaissance:** Analysis of the application's behavior and identification of potential entry points.
+* **Payload Injection:** Crafting and injecting SQL injection payloads.
+* **Response Analysis:** Analyzing the application's responses for errors and anomalies.
+* **Documentation:** Recording findings and steps to reproduce.
+
+**4. Findings**
+
+**4.1. SQL Injection Vulnerability**
+
+* **Vulnerability:** SQL Injection
+* **Location:** `http://testphp.vulnweb.com/artists.php?artist=[parameter]`
+* **Impact:** Unauthorized access to the database, potential data theft.
+* **Steps to Reproduce:**
+    1.  Navigate to `http://testphp.vulnweb.com/artists.php?artist=1`.
+    2.  Modify the URL to `http://testphp.vulnweb.com/artists.php?artist=1'`.
+    3.  Observe the error message.
+    4. Modify the URL to `http://testphp.vulnweb.com/artists.php?artist=1%27%20OR%20%271%27=%271`.
+    5. Observe the error message.
+* **Evidence:**
+    * Upon adding a single quote (`'`) to the `artist` parameter, the following error message was displayed:
+        * `Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 1`
+    * Upon adding the payload `http://testphp.vulnweb.com/artists.php?artist=1%27%20OR%20%271%27=%271` the following error was displayed.
+        * `Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' OR '1'='1' at line 1`
+* **Explanation:**
+    * The error messages indicate that the application is vulnerable to SQL injection. The single quote disrupts the intended SQL query, and the database server is attempting to interpret it as part of the command.
+    * The second error shows that the OR 1=1 payload is also being passed to the sql server.
+* **Mitigation:**
+    * Implement parameterized queries or prepared statements.
+    * Implement strict input validation and sanitization.
+
+**5. Recommendations**
+
+* Immediately implement the recommended mitigation strategies to prevent exploitation of the SQL injection vulnerability.
+* Conduct regular security assessments and penetration testing.
+* Educate developers on secure coding practices.
+
+**6. Conclusion**
+
+The `http://testphp.vulnweb.com/artists.php` page is vulnerable to SQL injection. This vulnerability poses a significant risk to the security of the application and its data. Implementing the recommended mitigation strategies is crucial to address this vulnerability.
+
+**7. Ethical Considerations**
+
+This assessment was conducted ethically, adhering to the following principles:
+
+* Testing was limited to `testphp.vulnweb.com`, a site specifically provided for security testing.
+* No attempts were made to exploit or damage the website beyond the scope of this assessment.
+* No sensitive data was accessed or compromised.
+
